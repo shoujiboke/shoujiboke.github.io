@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>感谢 GitHub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;line-height:1.7;max-width:900px;margin:0 auto;padding:2rem 1rem}
+.dark{background:#121212;color:#e0e0e0}
+.light{background:#f6f8fa;color:#333}
+
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+h1{font-size:2rem}
+.subtitle{color:#888}
+
+#toggle{padding:6px 12px;border-radius:8px;border:none;cursor:pointer}
+.dark #toggle{background:#1e1e30;color:#fff}
+.light #toggle{background:#e0e0e0;color:#333}
+
+.search-row{display:flex;gap:10px;margin:1rem 0}
+.search-input{flex:1;padding:10px 14px;border-radius:10px;border:none}
+.dark .search-input{background:#1e1e30;color:#fff}
+.light .search-input{background:#fff;color:#333}
+.search-btn{padding:10px 16px;border-radius:10px;border:none;white-space:nowrap}
+.dark .search-btn{background:#1e1e30;color:#fff}
+.light .search-btn{background:#e0e0e0;color:#333}
+
+.tag-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.tag{padding:4px 10px;border-radius:99px;font-size:.8rem;border:none;cursor:pointer}
+.dark .tag{background:#1e1e30;color:#fff}
+.light .tag{background:#eef2f5;color:#333}
+.tag.active{background:#007acc;color:white}
+
+.card{border-radius:12px;padding:1.4rem;margin-bottom:1rem;cursor:pointer}
+.dark .card{background:#1e1e30}
+.light .card{background:#fff}
+.card time{font-size:.8rem;color:#888}
+.card h2{margin:.5rem 0;font-size:1.2rem}
+.card-tags{display:flex;gap:6px;margin:.5rem 0}
+.card-tag{font-size:.75rem;padding:2px 8px;border-radius:99px;background:#333;color:#ccc}
+.light .card-tag{background:#eef2f5;color:#555}
+
+#article-view{display:none;padding:2rem 1rem;min-height:100vh}
+#article-view h2{margin-bottom:1rem}
+#article-view .meta{color:#888;margin-bottom:1rem}
+#article-view .content{line-height:1.8}
+#back{margin-bottom:1rem;padding:6px 12px;border-radius:8px;border:none;cursor:pointer}
+.dark #back{background:#1e1e30;color:#fff}
+.light #back{background:#e0e0e0;color:#333}
+
+img{max-width:100%;border-radius:8px;margin:1rem 0}
+video{max-width:100%;border-radius:8px;margin:1rem 0}
+
+footer{margin-top:3rem;text-align:center;color:#777;font-size:.9rem}
+</style>
+</head>
+
+<body class="dark">
+<div id="home">
+<header>
+  <div>
+    <h1>感谢 GitHub</h1>
+    <div class="subtitle">免费搭建个人博客</div>
+  </div>
+  <button id="toggle">白天模式</button>
+</header>
+
+<div class="search-row">
+  <input class="search-input" id="search" placeholder="搜索标题/标签/日期/内容">
+  <button class="search-btn" id="searchBtn">搜索</button>
+</div>
+
+<div class="tag-bar" id="tag-bar">
+  <button class="tag active" data-tag="all">全部</button>
+</div>
+
+<div id="list"></div>
+</div>
+
+<div id="article-view">
+  <button id="back">← 返回首页</button>
+  <h2 id="art-title"></h2>
+  <div class="meta" id="art-meta"></div>
+  <div class="content" id="art-content"></div>
+</div>
+
+<footer>© 2026 感谢 GitHub 提供免费 Pages 服务</footer>
+
+<script>
+const posts = [
+{
+  id:1,
+  title:"我的第一篇博客：图文视频全都有",
+  date:"2026-03-29",
+  tags:["博客","教程","HTML"],
+  content:`
+<p>这是纯单文件博客，首页超级轻量，不会卡。</p>
+<img src="https://picsum.photos/800/400">
+<video controls src="https://www.w3school.com.cn/i/movie.mp4"></video>
+`
+},
+{
+  id:2,
+  title:"GitHub Pages 搭建教程",
+  date:"2026-03-30",
+  tags:["GitHub","Pages","教程"],
+  content:`<p>新建仓库 → 上传 index.html → 开启 Pages → 完成。</p>`
+},
+// 👇 这篇是去年 2025 年，用来测试日期搜索
+{
+  id:3,
+  title:"去年学习博客的笔记",
+  date:"2025-10-05",
+  tags:["学习","笔记","回忆"],
+  content:`
+<p>这是2025年写的学习笔记。</p>
+<p>用来测试按年份、月份搜索是否好用。</p>
+`
+}
+];
+
+const POSTS_PER_PAGE = 30;
+
+function render(list) {
+  const showList = list.slice(0, POSTS_PER_PAGE);
+  const listEl = document.getElementById('list');
+  listEl.innerHTML = showList.map(p => `
+    <div class="card" onclick="openArticle(${p.id})">
+      <time>${p.date}</time>
+      <h2>${p.title}</h2>
+      <div class="card-tags">
+        ${p.tags.map(t => `<span class="card-tag">#${t}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function buildTags() {
+  const bar = document.getElementById('tag-bar');
+  const tags = new Set();
+  posts.forEach(p => p.tags.forEach(t => tags.add(t)));
+  Array.from(tags).forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'tag';
+    btn.dataset.tag = t;
+    btn.textContent = t;
+    bar.appendChild(btn);
+  });
+}
+
+function bindTag() {
+  document.querySelectorAll('.tag').forEach(t => {
+    t.onclick = () => {
+      document.querySelectorAll('.tag').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const v = t.dataset.tag;
+      const f = v == 'all' ? posts : posts.filter(p => p.tags.includes(v));
+      render(f);
+    }
+  });
+}
+
+document.getElementById('searchBtn').onclick = () => {
+  const kw = document.getElementById('search').value.toLowerCase().trim();
+  if (!kw) {
+    render(posts);
+    return;
+  }
+
+  const f = posts.filter(p => {
+    const title = p.title.toLowerCase();
+    const tags = p.tags.join(',').toLowerCase();
+    const content = p.content.toLowerCase();
+    const date = p.date.toLowerCase();
+
+    return title.includes(kw)
+        || tags.includes(kw)
+        || content.includes(kw)
+        || date.includes(kw);
+  });
+
+  render(f);
+};
+
+function openArticle(id) {
+  const p = posts.find(x => x.id == id);
+  document.getElementById('art-title').innerText = p.title;
+  document.getElementById('art-meta').innerText = p.date + ' · ' + p.tags.map(t=>'#'+t).join(' ');
+  document.getElementById('art-content').innerHTML = p.content;
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('article-view').style.display = 'block';
+}
+
+document.getElementById('back').onclick = () => {
+  document.getElementById('article-view').style.display = 'none';
+  document.getElementById('home').style.display = 'block';
+};
+
+const body = document.body;
+const toggle = document.getElementById('toggle');
+const mode = localStorage.getItem('mode') || 'dark';
+body.className = mode;
+toggle.textContent = mode == 'dark' ? '白天模式' : '黑夜模式';
+toggle.onclick = () => {
+  const m = body.classList.contains('dark') ? 'light' : 'dark';
+  body.className = m;
+  toggle.textContent = m == 'dark' ? '白天模式' : '黑夜模式';
+  localStorage.setItem('mode', m);
+};
+
+buildTags();
+render(posts);
+bindTag();
+</script>
+</body>
+</html>
