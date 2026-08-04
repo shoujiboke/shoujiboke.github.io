@@ -2,7 +2,6 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 关键移动端视口设置 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>红蕊知识库</title>
     <style>
@@ -12,333 +11,488 @@
             box-sizing: border-box;
             font-family: "Microsoft YaHei", system-ui, sans-serif;
         }
-        /* 全局红色变量 */
+
+        /* 浅红护眼主题：低饱和、少大面积深红 */
         :root {
-            --red-main: #C8102E;
-            --red-light: #F23C4F;
-            --red-bg: #FFE8EA;
-            --gold: #D4AF37;
-            --text-dark: #222;
-            --text-light: #fff;
-            --gray: #f7f7f7;
+            --main-red: #e66465;
+            --light-red: #fff5f5;
+            --soft-red: #fce4e4;
+            --text-red: #b33939;
+            --text-dark: #2f2f2f;
+            --text-light: #ffffff;
+            --border-red: #f2a5a5;
+            --gold: #c9a66b;
+            --bg-page: #fcfcfc;
+            --card-bg: #ffffff;
+            --border-normal: #eee;
         }
-        /* 导航栏 */
-        header {
-            background-color: var(--red-main);
-            padding: 12px 16px;
+        /* 深色黑白主题变量 */
+        [data-theme="dark"]{
+            --main-red: #e66465;
+            --light-red: #2b2020;
+            --soft-red: #3b2c2c;
+            --text-red: #ff8888;
+            --text-dark: #e8e8e8;
+            --text-light: #ffffff;
+            --border-red: #5c3c3c;
+            --gold: #d4b070;
+            --bg-page: #1a1a1a;
+            --card-bg: #2c2c2c;
+            --border-normal: #444;
         }
-        .nav-wrap {
-            max-width: 1200px;
-            margin: 0 auto;
+
+        body {
+            background: var(--bg-page);
+            color: var(--text-dark);
+            transition: background 0.3s, color 0.3s;
+        }
+        /* 主题切换按钮 */
+        .theme-switch{
+            position:fixed;
+            top:20px;
+            right:20px;
+            z-index:999;
+            border:none;
+            padding:8px 16px;
+            border-radius:6px;
+            background:var(--soft-red);
+            color:var(--text-red);
+            cursor:pointer;
+            font-size:14px;
+            transition:0.25s;
+        }
+        .theme-switch:hover{
+            opacity:0.85;
+        }
+
+        .page-wrap {
             display: flex;
-            flex-direction: column;
-            gap:12px;
-            align-items: center;
         }
+
+        /* 侧边导航：浅红渐变，不使用刺眼深红 */
+        aside {
+            width: 220px;
+            background: linear-gradient(180deg, var(--soft-red), var(--light-red));
+            border-right: 1px solid var(--border-red);
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            padding: 40px 20px;
+            transition: background 0.3s;
+        }
+
         .logo {
-            color: var(--text-light);
-            font-size: 24px;
+            color: var(--text-red);
+            font-size: 26px;
             font-weight: bold;
+            margin-bottom: 50px;
+            text-align: center;
         }
+
         .nav-list {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap:8px 14px;
+            flex-direction: column;
+            gap: 26px;
         }
+
         .nav-list a {
-            color: var(--text-light);
+            color: var(--text-dark);
             text-decoration: none;
-            font-size: 16px;
+            font-size: 17px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            transition: 0.2s;
         }
+
         .nav-list a:hover {
-            color: var(--gold);
+            background: rgba(230, 100, 101, 0.08);
+            color: var(--text-red);
         }
-        /* 横幅banner */
+
+        main {
+            flex: 1;
+        }
+
+        /* Banner：浅红柔和渐变，避免强光刺眼 */
         .banner {
-            background: linear-gradient(135deg, var(--red-main), var(--red-light));
+            background: linear-gradient(135deg, var(--soft-red), var(--light-red));
+            color: var(--text-red);
             text-align: center;
             padding: 45px 16px;
-            color: white;
+            border-bottom: 1px solid var(--border-red);
+            transition: background 0.3s;
         }
+
         .banner h1 {
-            font-size: clamp(32px,8vw,48px);
+            font-size: clamp(32px, 8vw, 48px);
             margin-bottom: 12px;
         }
+
         .banner p {
-            font-size: clamp(16px,4vw,20px);
-            opacity: 0.95;
+            font-size: clamp(16px, 4vw, 20px);
+            opacity: 0.9;
             margin-bottom: 32px;
-            line-height:1.6;
+            line-height: 1.6;
         }
-        .banner-buttons{
-            display:flex;
-            flex-wrap:wrap;
-            gap:16px;
-            justify-content:center;
+
+        .banner-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
         }
+
         .banner-buttons a {
             display: inline-block;
-            padding:14px 32px;
+            padding: 14px 32px;
             border-radius: 40px;
             text-decoration: none;
             font-weight: 500;
-            font-size:18px;
-            min-width:160px;
+            font-size: 18px;
+            min-width: 160px;
+            transition: 0.2s;
         }
+
         .btn-fill {
-            background: var(--red-light);
+            background: var(--main-red);
             color: white;
         }
+
+        .btn-fill:hover {
+            background: var(--text-red);
+        }
+
         .btn-stroke {
-            border: 2px solid #fff;
+            border: 2px solid var(--main-red);
+            color: var(--main-red);
+            background: transparent;
+        }
+
+        .btn-stroke:hover {
+            background: var(--main-red);
             color: white;
         }
-        /* 容器通用 */
+
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 40px 16px;
         }
+
         .section-title {
-            font-size: clamp(22px,6vw,28px);
-            color: var(--red-main);
+            font-size: clamp(22px, 6vw, 28px);
+            color: var(--text-red);
             border-left: 5px solid var(--gold);
             padding-left: 12px;
             margin-bottom: 24px;
         }
-        .bg-red-light {
-            background: var(--red-bg);
+
+        .bg-light-red {
+            background: var(--light-red);
             padding: 40px 0;
+            transition: background 0.3s;
         }
-        /* 课程卡片布局：移动端单列，大屏多列 */
+
         .card-wrap {
             display: grid;
             grid-template-columns: 1fr;
             gap: 20px;
         }
-        @media (min-width:768px){
-            .card-wrap{
-                grid-template-columns: repeat(auto-fill, minmax(340px,1fr));
+
+        @media (min-width: 768px) {
+            .card-wrap {
+                grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             }
         }
+
         .card {
-            background: #fff;
-            border-radius: 10px;
+            background: var(--card-bg);
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px #eee;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-normal);
+            transition: background 0.3s,border 0.3s;
         }
+
         .card-head {
-            background: var(--red-main);
-            color: white;
-            padding:14px 18px;
+            background: var(--soft-red);
+            color: var(--text-red);
+            padding: 14px 18px;
             font-weight: bold;
-            font-size:16px;
+            font-size: 16px;
+            transition: background 0.3s;
         }
+
         .card-body {
             padding: 20px;
         }
+
         .card-body a {
-            color: var(--red-main);
+            color: var(--text-red);
             word-break: break-all;
             text-decoration: none;
-            font-size:15px;
+            font-size: 15px;
         }
+
         .card-body a:hover {
-            color: var(--red-light);
             text-decoration: underline;
         }
-        /* =========重点修复这里！link-btn强制白色文字========= */
+
+        /* 链接按钮：白底浅红边框，文字清楚 */
         .link-btn {
             display: block;
-            background: var(--red-main);
-            color: #ffffff !important; /*强制纯白文字，解决看不清*/
-            padding:16px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-red);
+            color: var(--text-red) !important;
+            padding: 16px 20px;
             border-radius: 8px;
             text-decoration: none !important;
-            margin:12px 0;
+            margin: 12px 0;
             transition: 0.2s;
-            font-size:16px;
+            font-size: 16px;
         }
+
         .link-btn:hover,
-        .link-btn:active{
-            background: var(--red-light);
-            color:#ffffff !important; /*hover点击依旧白色*/
-            text-decoration:none !important;
+        .link-btn:active {
+            background: var(--light-red);
+            border-color: var(--main-red);
+            color: var(--text-red) !important;
+            text-decoration: none !important;
         }
-        /* 双栏联络区：手机变成1列 */
+
         .two-col {
             display: grid;
-            grid-template-columns:1fr;
+            grid-template-columns: 1fr;
             gap: 24px;
         }
-        @media (min-width:768px){
-            .two-col{
+
+        @media (min-width: 768px) {
+            .two-col {
                 grid-template-columns: 1fr 1fr;
             }
         }
-        /* 反馈大卡片 */
+
         .feedback-card {
-            background: var(--red-main);
-            color: white;
-            padding:36px 20px;
+            background: var(--light-red);
+            border: 1px solid var(--border-red);
+            color: var(--text-red);
+            padding: 36px 20px;
             border-radius: 12px;
             text-align: center;
+            transition: background 0.3s;
         }
-        .feedback-card h2{
-            margin-bottom:12px;
+
+        .feedback-card h2 {
+            margin-bottom: 12px;
         }
-        .feedback-card p{
-            line-height:1.6;
-            margin-bottom:20px;
+
+        .feedback-card p {
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
+
         .feedback-card a {
             display: inline-block;
-            background: white;
-            color: var(--red-main);
-            padding:14px 36px;
+            background: var(--main-red);
+            color: white;
+            padding: 14px 36px;
             border-radius: 30px;
             text-decoration: none;
             font-weight: bold;
-            font-size:17px;
+            font-size: 17px;
+            transition: 0.2s;
         }
-        /* 页脚 */
+
+        .feedback-card a:hover {
+            background: var(--text-red);
+        }
+
         footer {
-            background: var(--red-main);
-            color: white;
+            background: var(--soft-red);
+            color: var(--text-red);
             text-align: center;
-            padding:28px 16px;
+            padding: 28px 16px;
             margin-top: 40px;
-            font-size:15px;
-            line-height:1.6;
+            font-size: 15px;
+            line-height: 1.6;
+            border-top: 1px solid var(--border-red);
+            transition: background 0.3s;
         }
-        p{
-            line-height:1.8;
-            font-size:16px;
-            color:#333;
+
+        p {
+            line-height: 1.8;
+            font-size: 16px;
+            color: var(--text-dark);
+        }
+
+        /* 移动端：侧边栏变回顶部导航 */
+        @media (max-width: 768px) {
+            .page-wrap {
+                flex-direction: column;
+            }
+
+            aside {
+                width: 100%;
+                height: auto;
+                padding: 16px;
+                border-right: none;
+                border-bottom: 1px solid var(--border-red);
+            }
+
+            .nav-list {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .logo {
+                margin-bottom: 16px;
+            }
         }
     </style>
 </head>
 <body>
-<!-- 导航 -->
-<header>
-    <div class="nav-wrap">
-        <div class="logo">红蕊知识库</div>
-        <div class="nav-list">
-            <a href="#vision">愿景目标</a>
-            <a href="#course">课程安排</a>
-            <a href="#doc">常用文档</a>
-            <a href="#help">知识帮助</a>
-            <a href="#feedback">意见反馈</a>
-        </div>
-    </div>
-</header>
-
-<!-- 横幅 -->
-<div class="banner">
-    <h1>红蕊知识库首页</h1>
-    <p>红轨星联人才培养 · 自媒体IP运营综合知识平台</p>
-    <div class="banner-buttons">
-        <a href="#course" class="btn-fill">查看全部课程</a>
-        <a href="https://hongrui-v-0-1.nlyy.online/" class="btn-stroke">专项展示网站</a>
-    </div>
-</div>
-
-<!-- 愿景目标 -->
-<section id="vision" class="bg-red-light">
-    <div class="container">
-        <h2 class="section-title">🎯 愿景和目标</h2>
-        <p>
-            红蕊知识库整合通用人才培养、自媒体IP运营全套课程资料，搭建内部统一知识查阅入口，
-            为平台从业者提供标准化学习文档、表单工具、对接渠道，助力专项项目落地与个人能力成长。
-        </p>
-    </div>
-</section>
-
-<!-- 课程安排 -->
-<section id="course" class="container">
-    <h2 class="section-title">⛳️ 红蕊课程安排</h2>
-    <div class="card-wrap">
-        <div class="card">
-            <div class="card-head">红轨星联 · 通用人才培养课程理念介绍</div>
-            <div class="card-body">
-                <a href="https://course.rsnexus.top/">https://course.rsnexus.top/</a>
+    <!-- 黑白模式切换 -->
+    <button class="theme-switch" id="themeBtn">切换深色模式</button>
+    <div class="page-wrap">
+        <!-- 左侧导航 -->
+        <aside>
+            <div class="logo">红蕊知识库</div>
+            <div class="nav-list">
+                <a href="#vision">愿景目标</a>
+                <a href="#course">课程安排</a>
+                <a href="#doc">常用文档</a>
+                <a href="#help">知识帮助</a>
+                <a href="#feedback">意见反馈</a>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-head">逐海数创-自媒体课程</div>
-            <div class="card-body">
-                <a href="https://jcnv0kfbn39h.feishu.cn/wiki/Euq2w05RuirrQJkXREccqet6nKB">https://jcnv0kfbn39h.feishu.cn/wiki/Euq2w05RuirrQJkXREccqet6nKB</a>
+        </aside>
+
+        <!-- 主内容 -->
+        <main>
+            <div class="banner">
+                <h1>红蕊知识库首页</h1>
+                <p>红轨星联人才培养 · 自媒体IP运营综合知识平台</p>
+                <div class="banner-buttons">
+                    <a href="#course" class="btn-fill">查看全部课程</a>
+                    <a href="https://hongrui-v-0-1.nlyy.online/" target="_blank" class="btn-stroke">专项展示网站</a>
+                </div>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-head">落晓云霏-自媒体IP运营课程</div>
-            <div class="card-body">
-                <a href="https://jcnv0kfbn39h.feishu.cn/wiki/Q7K0wqqGviZPPhk05LgcbMHNnxb">https://jcnv0kfbn39h.feishu.cn/wiki/Q7K0wqqGviZPPhk05LgcbMHNnxb</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-head">暖通、保温、净水、智能技术培训</div>
-            <div class="card-body">
-                <a href="https://jcnv0kfbn39h.feishu.cn/wiki/LBT6wQHkbiPD5EkDgDwchJulnoc">https://jcnv0kfbn39h.feishu.cn/wiki/LBT6wQHkbiPD5EkDgDwchJulnoc</a>
-            </div>
-        </div>
-        <!-- 指定目标文档卡片 -->
-        <div class="card">
-            <div class="card-head">专项运营参考文档（目标链接）</div>
-            <div class="card-body">
-                <a href="https://jcnv0kfbn39h.feishu.cn/wiki/UZLbw7vKdiAWGGkjSXYcijq5nCf">https://jcnv0kfbn39h.feishu.cn/wiki/UZLbw7vKdiAWGGkjSXYcijq5nCf</a>
-            </div>
-        </div>
+
+            <section id="vision" class="bg-light-red">
+                <div class="container">
+                    <h2 class="section-title">🎯 愿景和目标</h2>
+                    <p>
+                        红蕊知识库整合通用人才培养、自媒体IP运营全套课程资料，搭建内部统一知识查阅入口，
+                        为平台从业者提供标准化学习文档、表单工具、对接渠道，助力专项项目落地与个人能力成长。
+                    </p>
+                </div>
+            </section>
+
+            <section id="course" class="container">
+                <h2 class="section-title">⛳️ 红蕊课程安排</h2>
+                <div class="card-wrap">
+                    <div class="card">
+                        <div class="card-head">红轨星联 · 通用人才培养课程理念介绍</div>
+                        <div class="card-body">
+                            <a href="https://course.rsnexus.top/" target="_blank">https://course.rsnexus.top/</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-head">逐海数创-自媒体课程</div>
+                        <div class="card-body">
+                            <a href="https://jcnv0kfbn39h.feishu.cn/wiki/Euq2w05RuirrQJkXREccqet6nKB" target="_blank">https://jcnv0kfbn39h.feishu.cn/wiki/Euq2w05RuirrQJkXREccqet6nKB</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-head">落晓云霏-自媒体IP运营课程</div>
+                        <div class="card-body">
+                            <a href="https://jcnv0kfbn39h.feishu.cn/wiki/Q7K0wqqGviZPPhk05LgcbMHNnxb" target="_blank">https://jcnv0kfbn39h.feishu.cn/wiki/Q7K0wqqGviZPPhk05LgcbMHNnxb</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-head">暖通、保温、净水、智能技术培训</div>
+                        <div class="card-body">
+                            <a href="https://jcnv0kfbn39h.feishu.cn/wiki/LBT6wQHkbiPD5EkDgDwchJulnoc" target="_blank">https://jcnv0kfbn39h.feishu.cn/wiki/LBT6wQHkbiPD5EkDgDwchJulnoc</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-head">专项运营参考文档（目标链接）</div>
+                        <div class="card-body">
+                            <a href="https://jcnv0kfbn39h.feishu.cn/wiki/UZLbw7vKdiAWGGkjSXYcijq5nCf" target="_blank">https://jcnv0kfbn39h.feishu.cn/wiki/UZLbw7vKdiAWGGkjSXYcijq5nCf</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="doc" class="bg-light-red">
+                <div class="container">
+                    <h2 class="section-title">⭐️ 常用文档和链接</h2>
+                    <h3 style="margin:10px 0;color:var(--text-red);font-size:17px;">红蕊各个专项展示网站</h3>
+                    <a href="https://hongrui-v-0-1.nlyy.online/" target="_blank" class="link-btn">https://hongrui-v-0-1.nlyy.online/</a>
+
+                    <h3 style="margin:25px 0 10px;color:var(--text-red);font-size:17px;">内部表单入口</h3>
+                    <a href="https://jcnv0kfbn39h.feishu.cn/share/base/form/shrcnboKmTjexvamprNWr2bdqJE" target="_blank" class="link-btn">红蕊内部需求收集表单</a>
+                    <a href="https://jcnv0kfbn39h.feishu.cn/share/base/form/shrcnLOME78QJeEuru3K7IHXOxb" target="_blank" class="link-btn">平台专项参与报名表单</a>
+                    <p style="margin-top:15px;color:#444;font-size:15px;">补充：红蕊自媒体专项课程合集入口</p>
+                </div>
+            </section>
+
+            <section id="help" class="container">
+                <h2 class="section-title">💡 知识空间帮助</h2>
+                <div class="two-col">
+                    <div class="card">
+                        <div class="card-head">联络QQ群</div>
+                        <div class="card-body">
+                            <a href="https://qm.qq.com/q/xQGeHTNcPI" target="_blank" class="link-btn">QQ群：849065897</a>
+                            <a href="https://m.qq.com/" target="_blank" class="link-btn">QQ群：723251383</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-head">专属联络员</div>
+                        <div class="card-body">
+                            <p style="font-size:16px;line-height:2;">联络员：小W<br>微信：A886699988811</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="feedback" class="container">
+                <div class="feedback-card">
+                    <h2>🙋反馈填写</h2>
+                    <p>对红蕊平台各板块内容提交改进建议、问题反馈</p>
+                    <a href="https://jcnv0kfbn39h.feishu.cn/share/base/form/shrcnbIOR0lIYdvviTw3uRAvoIf" target="_blank">前往反馈表单</a>
+                </div>
+            </section>
+
+            <footer>
+                <p>红蕊知识库 © 2026 内部知识平台<br>知识库更新动态实时同步</p>
+            </footer>
+        </main>
     </div>
-</section>
 
-<!-- 常用文档链接 -->
-<section id="doc" class="bg-red-light">
-    <div class="container">
-        <h2 class="section-title">⭐️ 常用文档和链接</h2>
-        <h3 style="margin:10px 0;color:var(--red-main);font-size:17px;">红蕊各个专项展示网站</h3>
-        <a href="https://hongrui-v-0-1.nlyy.online/" class="link-btn">https://hongrui-v-0-1.nlyy.online/</a>
+    <script>
+        //主题切换逻辑，本地存储记忆模式
+        const btn=document.getElementById('themeBtn');
+        const html=document.documentElement;
+        //读取缓存
+        let local=localStorage.getItem("webTheme");
+        if(local==="dark"){
+            html.setAttribute("data-theme","dark");
+            btn.innerText="切换浅色模式";
+        }
 
-        <h3 style="margin:25px 0 10px;color:var(--red-main);font-size:17px;">内部表单入口</h3>
-        <a href="https://jcnv0kfbn39h.feishu.cn/share/base/form/shrcnboKmTjexvamprNWr2bdqJE" class="link-btn">红蕊内部需求收集表单</a>
-        <a href="https://jcnv0kfbn39h.feishu.cn/share/base/form/shrcnLOME78QJeEuru3K7IHXOxb" class="link-btn">平台专项参与报名表单</a>
-        <p style="margin-top:15px;color:#444;font-size:15px;">补充：红蕊自媒体专项课程合集入口</p>
-    </div>
-</section>
-
-<!-- 知识帮助联络 -->
-<section id="help" class="container">
-    <h2 class="section-title">💡 知识空间帮助</h2>
-    <div class="two-col">
-        <div class="card">
-            <div class="card-head">联络QQ群</div>
-            <div class="card-body">
-                <a href="https://qm.qq.com/q/xQGeHTNcPI" class="link-btn">QQ群：849065897</a>
-                <a href="https://qm.qq.com/q/50ZzaXa6AM" class="link-btn">QQ群：723251383</a>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-head">专属联络员</div>
-            <div class="card-body">
-                <p style="font-size:16px;line-height:2;">联络员：小W<br>微信：A886699988811</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- 反馈区域 -->
-<section id="feedback" class="container">
-    <div class="feedback-card">
-        <h2>🙋反馈填写</h2>
-        <p>对红蕊平台各板块内容提交改进建议、问题反馈</p>
-        <a href="https://jcnv0kfbn39h.feishu.cn/share/base/form/shrcnbIOR0lIYdvviTw3uRAvoIf">前往反馈表单</a>
-    </div>
-</section>
-
-<!-- 页脚 -->
-<footer>
-    <p>红蕊知识库 © 2026 知识平台<br>知识库展示网站</p>
-</footer>
+        btn.onclick=function(){
+            if(html.hasAttribute("data-theme")){
+                html.removeAttribute("data-theme");
+                localStorage.setItem("webTheme","light");
+                btn.innerText="切换深色模式";
+            }else{
+                html.setAttribute("data-theme","dark");
+                localStorage.setItem("webTheme","dark");
+                btn.innerText="切换浅色模式";
+            }
+        }
+    </script>
 </body>
 </html>
